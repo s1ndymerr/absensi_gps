@@ -18,11 +18,9 @@ use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\ValidasiAbsensiController;
 use App\Http\Controllers\Siswa\LandingController as SiswaLanding;
 use App\Http\Controllers\Guru\LandingController as GuruLanding;
+use App\Http\Controllers\HomeController;
 
-
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/siswa', [SiswaLanding::class, 'index']);
 Route::get('/guru', [GuruLanding::class, 'index']);
