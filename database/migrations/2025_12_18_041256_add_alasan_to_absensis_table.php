@@ -9,11 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+  public function up()
 {
-    Schema::table('absensis', function (Blueprint $table) {
-        $table->text('alasan')->nullable()->after('status');
-    });
+    if (Schema::hasTable('absensis') &&
+        !Schema::hasColumn('absensis', 'alasan')) {
+
+        Schema::table('absensis', function (Blueprint $table) {
+            $table->text('alasan')->nullable();
+        });
+
+    }
 }
 
 
