@@ -9,11 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    
+public function up()
 {
-    Schema::table('guru', function (Blueprint $table) {
-        $table->string('nip')->unique()->after('email');
-    });
+    if (Schema::hasTable('guru') &&
+        !Schema::hasColumn('guru', 'nip')) {
+
+        Schema::table('guru', function (Blueprint $table) {
+            $table->string('nip')->nullable();
+        });
+
+    }
 }
 
 public function down(): void
