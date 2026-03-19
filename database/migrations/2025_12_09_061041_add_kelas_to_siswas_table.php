@@ -6,20 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::table('siswas', function (Blueprint $table) {
-            // Hapus kolom kelas lama jika ada
-            if (Schema::hasColumn('siswas', 'kelas')) {
-                $table->dropColumn('kelas');
+        public function up(): void
+        {
+            if (!Schema::hasColumn('siswas', 'kelas_id')) {
+                Schema::table('siswas', function (Blueprint $table) {
+                    $table->unsignedBigInteger('kelas_id')->nullable()->after('id');
+                });
             }
-
-            // Tambah foreign key kelas_id
-            $table->unsignedBigInteger('kelas_id')->nullable()->after('id');
-            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('set null');
-        });
-    }
-
+        }
     public function down(): void
     {
         Schema::table('siswas', function (Blueprint $table) {
