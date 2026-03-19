@@ -6,11 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-   public function up(): void
+    
+public function up()
 {
-    Schema::table('siswas', function (Blueprint $table) {
-        $table->string('username')->nullable()->after('nis');
-    });
+    if (!Schema::hasColumn('siswas', 'username')) {
+
+        Schema::table('siswas', function (Blueprint $table) {
+            $table->string('username')->nullable();
+        });
+
+    }
 }
 
 
