@@ -5,18 +5,23 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
+
+   
+public function up()
 {
-    /**
-     * Run the migrations.
-     */
-   public function up(): void
-{
-    Schema::table('absensis', function (Blueprint $table) {
-        $table->enum('approval_status', ['pending', 'disetujui', 'ditolak'])
-              ->nullable()
-              ->after('status');
-    });
+    if (!Schema::hasColumn('absensis', 'approval_status')) {
+
+        Schema::table('absensis', function (Blueprint $table) {
+            $table->enum('approval_status', [
+                'pending',
+                'disetujui',
+                'ditolak'
+            ])->default('pending');
+        });
+
+    }
 }
+
 
 public function down(): void
 {
