@@ -173,7 +173,7 @@ return back()->with('success', $pesan);
         {
             // 1. Matikan semua lokasi
             Lokasi::where('status', 'aktif')->update([
-                'status' => 'nonaktif'
+                'status' => 'tidak_aktif'
             ]);
 
             // 2. Aktifkan lokasi yang dipilih

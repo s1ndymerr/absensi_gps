@@ -18,10 +18,10 @@
                 <h2 class="teacher-name">{{ $user->name }}</h2>
                 <div class="teacher-badges">
                     <span class="badge-class bg-purple">
-                        <i class="fas fa-chalkboard"></i> {{ $user->gurus->kelas ?? '-' }}
+                        <i class="fas fa-chalkboard"></i> {{ $user->guru->kelas ?? '-' }}
                     </span>
                     <span class="badge-class bg-indigo">
-                        <i class="fas fa-user-tag"></i> {{ $user->gurus->jurusan ?? '-' }}
+                        <i class="fas fa-user-tag"></i> {{ $user->guru->jurusan ?? '-' }}
                     </span>
                 </div>
             </div>

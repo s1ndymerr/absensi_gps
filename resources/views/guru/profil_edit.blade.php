@@ -231,9 +231,9 @@
                     <i class="fas fa-chalkboard-teacher"></i> Guru
                 </span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->gurus->kelas ?? '-' }}</span>
+                <span class="meta-item">{{ $user->guru->kelas ?? '-' }}</span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->gurus->jurusan ?? '-' }}</span>
+                <span class="meta-item">{{ $user->guru->jurusan ?? '-' }}</span>
             </div>
         </div>
     </div>
@@ -283,7 +283,7 @@
                     <div class="info-content">
                         <label class="info-label">Nomor Induk Pegawai (NIP)</label>
                         <input type="text"
-                               value="{{ $user->gurus->nip ?? '-' }}"
+                               value="{{ $user->guru->nip ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>
@@ -296,7 +296,7 @@
                     <div class="info-content">
                         <label class="info-label">Kelas Pengampu</label>
                         <input type="text"
-                               value="{{ $user->gurus->kelas ?? '-' }}"
+                               value="{{ $user->guru->kelas ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>
@@ -309,7 +309,7 @@
                     <div class="info-content">
                         <label class="info-label">Jurusan Keahlian</label>
                         <input type="text"
-                               value="{{ $user->gurus->jurusan ?? '-' }}"
+                               value="{{ $user->guru->jurusan ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>

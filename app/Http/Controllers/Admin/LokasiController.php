@@ -69,7 +69,7 @@ class LokasiController extends Controller
     {
         // Matikan semua lokasi
         Lokasi::query()->update([
-            'status' => 'nonaktif'
+            'status' => 'tidak_aktif'
         ]);
 
         // Aktifkan lokasi yang dipilih
