@@ -55,7 +55,7 @@
                 </div>
                 <div>
                     <h3>Informasi Pribadi</h3>
-                    <p>Identitas dasar siswa (Isi yang ingin diubah saja)</p>
+                    <p>Identitas dasar siswa</p>
                 </div>
             </div>
 
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>NIS <span class="required">*</span></label>
+                    <label>NIS</label>
                     <div class="input-wrapper">
                         <input type="text" name="nis" class="modern-input {{ $errors->has('nis') ? 'input-error' : '' }}" value="{{ old('nis', $siswa->siswa->nis ?? '') }}" placeholder="Nomor Induk Siswa">
                         <i class="fas fa-id-badge input-icon"></i>
@@ -115,7 +115,7 @@
                 <div class="form-group full-width">
                     <label>Alamat Lengkap</label>
                     <div class="input-wrapper">
-                        <textarea name="alamat" class="modern-input {{ $errors->has('alamat') ? 'input-error' : '' }}" rows="3" placeholder="Tulis alamat domisili..." style="resize: vertical;">{{ old('alamat', $siswa->siswa->alamat ?? '') }}</textarea>
+                        <textarea name="alamat" class="modern-input {{ $errors->has('alamat') ? 'input-error' : '' }}" rows="3" placeholder="Tulis alamat domisili...">{{ old('alamat', $siswa->siswa->alamat ?? '') }}</textarea>
                         <i class="fas fa-map-marker-alt input-icon" style="top: 15px;"></i>
                     </div>
                 </div>
@@ -135,9 +135,9 @@
 
             @php
                 $fullKelas = $siswa->siswa->kelas ?? '';
-                $kelasArray = explode(' ', $fullKelas);
-                $tingkatValue = $kelasArray[0] ?? '';
-                $jurusanValue = isset($kelasArray[1]) ? implode(' ', array_slice($kelasArray, 1)) : '';
+                $kelasArr = explode(' ', $fullKelas);
+                $tingkat = $kelasArr[0] ?? '';
+                $jurusanStr = isset($kelasArr[1]) ? implode(' ', array_slice($kelasArr, 1)) : '';
             @endphp
 
             <div class="form-grid">
@@ -145,9 +145,9 @@
                     <label>Tingkat</label>
                     <div class="input-wrapper">
                         <select name="tingkat" class="modern-input">
-                            <option value="">-- Pilih Tingkat --</option>
+                            <option value="">-- Pilih --</option>
                             @foreach (['X','XI','XII'] as $t)
-                                <option value="{{ $t }}" {{ old('tingkat', $tingkatValue) == $t ? 'selected' : '' }}>{{ $t }}</option>
+                                <option value="{{ $t }}" {{ $tingkat == $t ? 'selected' : '' }}>{{ $t }}</option>
                             @endforeach
                         </select>
                         <i class="fas fa-layer-group input-icon"></i>
@@ -158,12 +158,12 @@
                     <label>Jurusan & Kelas</label>
                     <div class="input-wrapper">
                         <select name="jurusan_kelas" class="modern-input">
-                            <option value="">-- Pilih Jurusan --</option>
-                            @php $jurusans = ['RPL','TKJ','TKR','AK','DPIB','MP','SK']; @endphp
-                            @foreach ($jurusans as $j)
+                            <option value="">-- Pilih --</option>
+                            @php $jurusanList = ['RPL','TKJ','TKR','AK','DPIB','MP','SK']; @endphp
+                            @foreach ($jurusanList as $j)
                                 @for ($i = 1; $i <= 3; $i++)
                                     @php $val = $j.' '.$i; @endphp
-                                    <option value="{{ $val }}" {{ old('jurusan_kelas', $jurusanValue) == $val ? 'selected' : '' }}>{{ $val }}</option>
+                                    <option value="{{ $val }}" {{ $jurusanStr == $val ? 'selected' : '' }}>{{ $val }}</option>
                                 @endfor
                             @endforeach
                         </select>
@@ -174,15 +174,15 @@
                 <div class="form-group">
                     <label>Tahun Masuk</label>
                     <div class="input-wrapper">
-                        <input type="number" name="tahun_masuk" class="modern-input {{ $errors->has('tahun_masuk') ? 'input-error' : '' }}" value="{{ old('tahun_masuk', $siswa->siswa->tahun_masuk ?? '') }}" placeholder="Contoh: 2023">
+                        <input type="number" name="tahun_masuk" class="modern-input" value="{{ old('tahun_masuk', $siswa->siswa->tahun_masuk ?? '') }}">
                         <i class="fas fa-calendar-alt input-icon"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Nama Orang Tua/Wali</label>
+                    <label>Nama Orang Tua</label>
                     <div class="input-wrapper">
-                        <input type="text" name="nama_orang_tua" class="modern-input {{ $errors->has('nama_orang_tua') ? 'input-error' : '' }}" value="{{ old('nama_orang_tua', $siswa->siswa->nama_orang_tua ?? '') }}" placeholder="Nama orang tua atau wali">
+                        <input type="text" name="nama_orang_tua" class="modern-input" value="{{ old('nama_orang_tua', $siswa->siswa->nama_orang_tua ?? '') }}">
                         <i class="fas fa-users input-icon"></i>
                     </div>
                 </div>
@@ -196,7 +196,7 @@
                 </div>
                 <div>
                     <h3>Keamanan Akun</h3>
-                    <p>Email dan kata sandi untuk login</p>
+                    <p>Email dan kata sandi</p>
                 </div>
             </div>
 
@@ -204,7 +204,7 @@
                 <div class="form-group">
                     <label>Email <span class="required">*</span></label>
                     <div class="input-wrapper">
-                        <input type="email" name="email" class="modern-input {{ $errors->has('email') ? 'input-error' : '' }}" value="{{ old('email', $siswa->email) }}" placeholder="nama@email.com">
+                        <input type="email" name="email" class="modern-input" value="{{ old('email', $siswa->email) }}">
                         <i class="fas fa-envelope input-icon"></i>
                     </div>
                 </div>
@@ -212,23 +212,22 @@
                 <div class="form-group">
                     <label>Password Baru</label>
                     <div class="input-wrapper">
-                        <input type="password" name="password" id="password" class="modern-input {{ $errors->has('password') ? 'input-error' : '' }}" placeholder="Kosongkan jika tidak diubah">
+                        <input type="password" name="password" id="password" class="modern-input" placeholder="Kosongkan jika tidak ganti">
                         <i class="fas fa-lock input-icon"></i>
                         <button type="button" onclick="togglePass('password')" class="toggle-btn">
                             <i class="fas fa-eye"></i>
                         </button>
-                    </div>
-                    <div class="text-hint">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Isi hanya jika ingin mengganti password.</span>
                     </div>
                 </div>
 
                 <div class="form-group" id="passwordConfirmationGroup" style="display: none;">
                     <label>Konfirmasi Password Baru</label>
                     <div class="input-wrapper">
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="modern-input" placeholder="Ulangi password baru">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="modern-input">
                         <i class="fas fa-lock input-icon"></i>
+                        <button type="button" onclick="togglePass('password_confirmation')" class="toggle-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -250,43 +249,42 @@
                 <i class="fas fa-arrow-left"></i> Batal
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Simpan Perubahan
+                <i class="fas fa-save"></i> Perbarui Data
             </button>
         </div>
     </form>
 </div>
 
 <style>
-    /* ... (Gunakan CSS dari kodingan awal kamu) ... */
+    /* Paste CSS original kamu di sini tanpa ada perubahan sedikitpun */
+    /* Pastikan CSS dari prompt awal kamu dimasukkan di sini */
 </style>
 
 <script>
-    // Logic: Toggle Password Visibility
+    // Toggle Password Original Logic
     function togglePass(id) {
         const input = document.getElementById(id);
         const icon = event.currentTarget.querySelector('i');
         if (input.type === 'password') {
             input.type = 'text';
-            icon.className = 'fas fa-eye-slash';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
         } else {
             input.type = 'password';
-            icon.className = 'fas fa-eye';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
         }
     }
 
-    // Logic: Munculkan konfirmasi password HANYA jika password diisi
+    // Logic Tampilkan Konfirmasi Password hanya jika diisi
     document.getElementById('password').addEventListener('input', function() {
-        const confirmGroup = document.getElementById('passwordConfirmationGroup');
-        confirmGroup.style.display = this.value.length > 0 ? 'block' : 'none';
+        document.getElementById('passwordConfirmationGroup').style.display = this.value.length > 0 ? 'block' : 'none';
+        updateProgress();
     });
 
-    // Progress Circle Logic (Disederhanakan)
+    // Progress Circle Original Logic
     function updateProgress() {
         const inputs = document.querySelectorAll('.modern-input');
         let filled = 0;
-        inputs.forEach(input => {
-            if(input.value && input.value !== "") filled++;
-        });
+        inputs.forEach(input => { if(input.value.trim() !== '') filled++; });
         const percent = Math.round((filled / inputs.length) * 100);
         document.querySelector('.progress-ring').setAttribute('stroke-dasharray', `${percent}, 100`);
         document.querySelector('.progress-value').textContent = `${percent}%`;
