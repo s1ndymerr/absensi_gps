@@ -22,10 +22,10 @@
                 <h2 class="student-name">{{ $user->name }}</h2>
                 <div class="student-badges">
                     <span class="badge-class bg-blue">
-                        <i class="fas fa-user-graduate"></i> {{ $user->kelas ?? '-' }}
+                        <i class="fas fa-user-graduate"></i> {{ $user->siswa->kelas ?? '-' }}
                     </span>
                     <span class="badge-class bg-teal">
-                        <i class="fas fa-id-card"></i> {{ $siswa->siswa->nis ?? '-' }}
+                        <i class="fas fa-id-card"></i> {{ $user->siswa->nis ?? '-' }}
                     </span>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                         </div>
                         <div class="info-content">
                             <div class="info-label">Nomor Induk Siswa (NIS)</div>
-                            <div class="info-value">{{ $siswa->siswa->nis ?? '-' }}</div>
+                            <div class="info-value">{{ $user->siswa->nis ?? '-' }}</div>
                         </div>
                     </div>
 
