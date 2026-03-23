@@ -164,7 +164,3 @@ Route::prefix('siswa')->name('siswa.')->middleware('auth')->group(function () {
         
 });
 
-
-Route::get('/generate-hash', function () {
-    return \Illuminate\Support\Facades\Hash::make('admin123');
-});
