@@ -94,7 +94,7 @@
                 </div>
                 <div class="info-content">
                     <div class="info-label">Jurusan Keahlian</div>
-                    <div class="info-value">{{ $user->jurusan ?? '-' }}</div>
+                    <div class="info-value">{{ $user->gurus->jurusan ?? '-' }}</div>
                 </div>
             </div>
 

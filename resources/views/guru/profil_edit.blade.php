@@ -336,7 +336,7 @@
                     <div class="info-content">
                         <label class="info-label">Nomor Induk Pegawai (NIP)</label>
                         <input type="text"
-                               value="{{ $user->nip ?? '-' }}"
+                               value="{{ $user->gurus->nip ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>
@@ -350,7 +350,7 @@
                     <div class="info-content">
                         <label class="info-label">Kelas Pengampu</label>
                         <input type="text"
-                               value="{{ $user->kelas ?? '-' }}"
+                               value="{{ $user->gurus->kelas ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>
@@ -364,7 +364,7 @@
                     <div class="info-content">
                         <label class="info-label">Jurusan Keahlian</label>
                         <input type="text"
-                               value="{{ $user->jurusan ?? '-' }}"
+                               value="{{ $user->gurus->jurusan ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>
