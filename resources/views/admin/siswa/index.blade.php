@@ -118,7 +118,7 @@
                                     <div class="user-info-text">
                                         <h4 class="name-text">{{ $siswa->name }}</h4>
                                         <!-- LOGIKA SISWA: Subtitle NIS, bukan ID -->
-                                        <span class="user-sub">NIS: {{ $siswa->nis ?? '-' }}</span>
+                                        <span class="user-sub">NIS: {{ $siswa->siswa->nis ?? '-' }}</span>
                                     </div>
                                 </div>
                             </td>
