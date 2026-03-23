@@ -61,7 +61,14 @@ class RekapAbsensiController extends Controller
         ->orderBy('kelas')
         ->orderBy('name');
 
-    $siswa = $querySiswa->get();
+    // Gunakan join supaya kolom 'kelas' dari tabel siswas bisa dipakai buat ORDER BY
+    $siswa = User::where('role', 'siswa')
+        ->where('status_akun', 'aktif')
+        ->join('siswas', 'users.id', '=', 'siswas.user_id') // Hubungkan ke tabel siswas
+        ->select('users.*', 'siswas.kelas') // Ambil semua data user + kolom kelas
+        ->orderBy('siswas.kelas', 'asc')   // Sekarang bisa urut berdasarkan kelas!
+        ->orderBy('users.name', 'asc')
+        ->get();
 
     $rekap_siswa = $siswa->map(function ($s) use ($tanggal) {
         $absen = Absensi::where('user_id', $s->id)
@@ -70,7 +77,7 @@ class RekapAbsensiController extends Controller
 
         return [
             'nama'   => $s->name,
-            'kelas'  => $s->kelas,
+            'kelas'  => $s->kelas, // Ini sekarang sudah aman karena hasil join
             'status' => $absen ? $absen->status : 'alpha',
         ];
     });
