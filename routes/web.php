@@ -29,6 +29,12 @@ use App\Http\Controllers\Guru\ProfilController as GuruProfilController;
 // HOME
 use App\Http\Controllers\HomeController;
 
+
+use Illuminate\Support\Facades\Hash;
+
+Route::get('/generate-hash', function () {
+    return Hash::make('admin123');
+});
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
