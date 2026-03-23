@@ -5,44 +5,45 @@ namespace App\Http\Controllers\Siswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
-use Carbon\Carbon; // Tambahkan ini
+use App\Models\User; // Tambahkan ini
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
    public function index()
    {
-       $userId = auth()->id();
+        $userId = auth()->id();
 
-       $hadir = Absensi::where('user_id', $userId)
-           ->where('status', 'hadir')
-           ->count();
+        // AMBIL DATA USER BESERTA RELASI SISWA-NYA
+        $user = User::with('siswa')->find($userId);
 
-       $izin = Absensi::where('user_id', $userId)
-           ->where('status', 'izin')
-           ->count();
+        $hadir = Absensi::where('user_id', $userId)
+            ->where('status', 'hadir')
+            ->count();
 
-       $alfa = Absensi::where('user_id', $userId)
-           ->where('status', 'alfa')
-           ->count();
+        $izin = Absensi::where('user_id', $userId)
+            ->where('status', 'izin')
+            ->count();
 
-       // TOTAL SEMUA
-       $tidakHadir = $izin + $alfa;
-       $totalAbsensi = $hadir + $tidakHadir;
+        $alfa = Absensi::where('user_id', $userId)
+            ->where('status', 'alfa')
+            ->count();
 
-       // -------------------------
-       // Tambahkan definisi $absenHariIni
-       $absenHariIni = Absensi::where('user_id', $userId)
-           ->whereDate('created_at', Carbon::today())
-           ->first(); // tetap satu record, tidak merubah logika
-       // -------------------------
+        $tidakHadir = $izin + $alfa;
+        $totalAbsensi = $hadir + $tidakHadir;
 
-       return view('siswa.dashboard', compact(
-           'hadir',
-           'izin',
-           'alfa',
-           'totalAbsensi',
-           'tidakHadir',
-           'absenHariIni' // tambahkan di compact
-       ));
+        $absenHariIni = Absensi::where('user_id', $userId)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        return view('siswa.dashboard', compact(
+            'user', // KIRIM VARIABEL USER KE VIEW
+            'hadir',
+            'izin',
+            'alfa',
+            'totalAbsensi',
+            'tidakHadir',
+            'absenHariIni'
+        ));
    }
 }
