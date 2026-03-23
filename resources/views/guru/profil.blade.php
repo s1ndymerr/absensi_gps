@@ -17,9 +17,9 @@
             <div class="profile-meta">
                 <span class="meta-item"><i class="fas fa-chalkboard-teacher"></i> Guru</span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->kelas ?? '-' }}</span>
+                <span class="meta-item">{{ $user->gurus->kelas ?? '-' }}</span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->jurusan ?? '-' }}</span>
+                <span class="meta-item">{{ $user->gurus->jurusan ?? '-' }}</span>
             </div>
         </div>
         <div class="header-decoration">
@@ -72,7 +72,7 @@
                 </div>
                 <div class="info-content">
                     <div class="info-label">Nomor Induk Pegawai (NIP)</div>
-                    <div class="info-value">{{ $user->nip ?? '-' }}</div>
+                    <div class="info-value">{{ $user->gurus->nip ?? '-' }}</div>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                 </div>
                 <div class="info-content">
                     <div class="info-label">Kelas Pengampu</div>
-                    <div class="info-value">{{ $user->kelas ?? '-' }}</div>
+                    <div class="info-value">{{ $user->gurus->kelas ?? '-' }}</div>
                 </div>
             </div>
 
