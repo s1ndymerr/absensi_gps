@@ -106,7 +106,7 @@
                     <tbody>
                         @foreach($siswas as $siswa)
                         <!-- Data attribute untuk filter JS -->
-                        <tr data-kelas="{{ $siswa->kelas ?? '' }}">
+                        <tr data-kelas="{{ $siswa->siswa->kelas ?? '' }}">
 <td class="text-id">
     {{ $siswas->firstItem() + $loop->index }}
 </td>
@@ -124,8 +124,8 @@
                             </td>
                             <!-- LOGIKA SISWA: Kolom Kelas menggantikan Bergabung -->
                             <td>
-                                @if($siswa->kelas)
-                                    <span class="status-pill pill-blue">{{ $siswa->kelas }}</span>
+                                @if($siswa->siswa && $siswa->siswa->kelas)
+                                    <span class="status-pill pill-blue">{{ $siswa->siswa->kelas }}</span>
                                 @else
                                     <span class="status-pill pill-muted">Belum Ada</span>
                                 @endif
