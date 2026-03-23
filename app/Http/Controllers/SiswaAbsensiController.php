@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
-use App\Models\Lokasi; // 1. Pastikan Model Lokasi di-import
+use App\Models\Lokasi; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use DB;
 
 class SiswaAbsensiController extends Controller
 {
@@ -24,8 +23,7 @@ class SiswaAbsensiController extends Controller
             cos(deg2rad($lat2)) *
             sin($dLon / 2) ** 2;
 
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        return $R * $c;
+        return $R * (2 * atan2(sqrt($a), sqrt(1 - $a)));
     }
 
     // ==============================
@@ -38,21 +36,20 @@ class SiswaAbsensiController extends Controller
             'longitude' => 'required',
         ]);
 
-        // 2. AMBIL LOKASI AKTIF DARI DATABASE
+        // AMBIL LOKASI DARI DATABASE (PENTING!)
         $lokasiAktif = Lokasi::where('status', 'aktif')->first();
 
-        // Cek jika admin belum mengaktifkan lokasi manapun
         if (!$lokasiAktif) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal absen: Lokasi sekolah belum diaktifkan oleh Admin.',
+                'message' => 'Lokasi sekolah belum diaktifkan oleh Admin.',
             ], 400);
         }
 
         $user = Auth::user();
         $tanggalHariIni = now()->toDateString();
 
-        // 3. CEK SUDAH ABSEN ATAU BELUM
+        // CEK SUDAH ABSEN ATAU BELUM
         $sudahAbsen = Absensi::where('user_id', $user->id)
             ->whereDate('tanggal', $tanggalHariIni)
             ->first();
@@ -64,7 +61,7 @@ class SiswaAbsensiController extends Controller
             ], 400);
         }
 
-        // 4. HITUNG JARAK BERDASARKAN LOKASI DARI DB
+        // HITUNG JARAK BERDASARKAN DATABASE
         $jarak = $this->hitungJarak(
             $request->latitude,
             $request->longitude,
@@ -72,21 +69,27 @@ class SiswaAbsensiController extends Controller
             $lokasiAktif->longitude
         );
 
-        // Radius toleransi (bisa kamu ubah sesuai kebutuhan)
-        $radiusMaks = 100; 
+        // Kasih radius agak longgar (misal 150 meter) biar nggak rewel GPS-nya
+        $radiusMaks = 150; 
 
-        // Logika kamu: Tetap "Izin" kalau jauh
-        $status = $jarak <= $radiusMaks ? 'hadir' : 'izin';
+        // Kalau jaraknya lebih dari radius, TOLAK ABSEN (Biar nggak langsung 'izin')
+        if ($jarak > $radiusMaks) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal! Jarak Anda ' . round($jarak) . ' meter dari sekolah. Maksimal radius ' . $radiusMaks . ' meter.',
+            ], 400);
+        }
+
+        // Jika dalam radius, status otomatis HADIR
+        $status = 'hadir';
 
         // JAM MASUK & TERLAMBAT
         $jamMasuk = now()->format('H:i:s');
         $batasJam = '07:00:00';
+        $terlambat = ($jamMasuk > $batasJam) ? 1 : 0;
 
-        // Hanya dianggap terlambat jika statusnya 'hadir' tapi lewat jam 7
-        $terlambat = ($status === 'hadir' && $jamMasuk > $batasJam) ? 1 : 0;
-
-        // 5. SIMPAN ABSENSI
-        $absensi = Absensi::create([
+        // SIMPAN
+        Absensi::create([
             'user_id'     => $user->id,
             'tanggal'     => $tanggalHariIni,
             'status'      => $status,
@@ -94,29 +97,14 @@ class SiswaAbsensiController extends Controller
             'terlambat'   => $terlambat,
             'latitude'    => $request->latitude,
             'longitude'   => $request->longitude,
-            'jarak_meter' => round($jarak), // Kita bulatkan biar rapi
+            'jarak_meter' => round($jarak),
         ]);
 
         return response()->json([
             'success'   => true,
-            'message'   => $status === 'hadir' ? 'Absen Berhasil (Hadir)' : 'Anda diluar radius, status otomatis: Izin',
+            'message'   => 'Absen Berhasil! Jarak Anda: ' . round($jarak) . 'm',
             'status'    => $status,
-            'terlambat' => $terlambat,
             'jam_masuk' => $jamMasuk,
-            'jarak'     => round($jarak) . " meter",
         ]);
-    }
-
-    // ==============================
-    //   HISTORI ABSENSI SISWA
-    // ==============================
-    public function history()
-    {
-        $data = Absensi::where('user_id', Auth::id())
-            ->orderBy('tanggal', 'desc')
-            ->orderBy('jam_masuk', 'desc')
-            ->get();
-
-        return response()->json($data);
     }
 }
