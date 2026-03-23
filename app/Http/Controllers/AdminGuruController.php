@@ -76,7 +76,7 @@ class AdminGuruController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'nip' => 'nullable|unique:gurus,nip,' . ($user->gurus->id ?? 0),
+            'nip' => 'nullable|unique:gurus,nip,' . ($user->guru->id ?? 0),
         ]);
 
         DB::transaction(function () use ($request, $user) {

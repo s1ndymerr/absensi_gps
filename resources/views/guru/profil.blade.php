@@ -72,7 +72,7 @@
                 </div>
                 <div class="info-content">
                     <div class="info-label">Nomor Induk Pegawai (NIP)</div>
-                    <div class="info-value">{{ $user->gurus->nip ?? '-' }}</div>
+                    <div class="info-value">{{ $user->guru->nip ?? '-' }}</div>
                 </div>
             </div>
 
