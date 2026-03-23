@@ -4,31 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * Kolom yang boleh diisi mass assignment
-     */
-   protected $fillable = [
-        'nis',
-        'nisn',
-        'kelas',
-        'jurusan',
-        'tahun_masuk',
-        'nama_orang_tua',
-        'nomor_telepon',
-        'tanggal_lahir',
-        'nip',
-        'username',
+    protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'status_akun',
+        'status_akun'
     ];
 
     protected $hidden = [
@@ -36,13 +22,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function guru()
+    {
+        return $this->hasOne(Guru::class);
+    }
+
+    public function siswa()
+    {
+        return $this->hasOne(Siswa::class);
+    }
+
     public function absensis()
-{
-    return $this->hasMany(Absensi::class, 'user_id');
-}
-
-
+    {
+        return $this->hasMany(Absensi::class, 'user_id');
+    }
 }

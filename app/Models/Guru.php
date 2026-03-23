@@ -2,24 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Guru extends Model
 {
-        protected $table = 'users';
+    protected $table = 'gurus';
 
     protected $fillable = [
-        'name',
-        'email',
-        'nip',
-        'password',
-        'status_akun'
+        'user_id',
+        'nip'
     ];
 
-    public function absensis()
-{
-    return $this->hasMany(Absensi::class);
-}
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class);
+    }
 }

@@ -2,33 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class Siswa extends Authenticatable
+class Siswa extends Model
 {
-    use HasFactory;
-
-    protected $table = 'users'; // pakai tabel users
+    protected $table = 'siswas';
 
     protected $fillable = [
-        'name',
+        'user_id',
         'nis',
-        'username',
-        'email',
-        'password',
-        'role',
         'kelas',
-        'status_akun'
+        'jurusan'
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token'
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function absensis()
-{
-    return $this->hasMany(Absensi::class, 'user_id');
-}
+    {
+        return $this->hasMany(Absensi::class, 'user_id');
+    }
 }
