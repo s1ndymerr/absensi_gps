@@ -231,7 +231,7 @@
                     <i class="fas fa-chalkboard-teacher"></i> Guru
                 </span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->gurus->kelas_pengampu ?? '-' }}</span>
+                <span class="meta-item">{{ $user->gurus->kelas ?? '-' }}</span>
                 <span class="meta-separator">•</span>
                 <span class="meta-item">{{ $user->gurus->jurusan ?? '-' }}</span>
             </div>
@@ -296,7 +296,7 @@
                     <div class="info-content">
                         <label class="info-label">Kelas Pengampu</label>
                         <input type="text"
-                               value="{{ $user->gurus->kelas_pengampu ?? '-' }}"
+                               value="{{ $user->gurus->kelas ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>

@@ -75,7 +75,7 @@ class AdminGuruController extends Controller
             Guru::create([
                 'user_id' => $user->id,
                 'nip' => $validated['nip'] ?? null,
-                'kelas_pengampu' => $request->kelas_pengampu, // ✅ Pastikan sesuai name di view
+                'kelas_pengampu' => $request->kelas, // ✅ Pastikan sesuai name di view
                 'jurusan' => $request->jurusan,
             ]);
         });
@@ -121,7 +121,7 @@ class AdminGuruController extends Controller
                 ['user_id' => $user->id],
                 [
                     'nip' => $request->nip,
-                    'kelas_pengampu' => $request->kelas_pengampu,
+                    'kelas_pengampu' => $request->kelas,
                     'jurusan' => $request->jurusan,
                 ]
             );
