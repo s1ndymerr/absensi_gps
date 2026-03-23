@@ -28,14 +28,18 @@ class AuthController extends Controller
         $role = $request->role;
 
         // Cari user sesuai identifier dan role
-        $user = User::where(function($q) use ($identifier) {
-                $q->where('email', $identifier)
-                  ->orWhere('username', $identifier)
-                  ->orWhere('nis', $identifier)
-                  ->orWhere('nip', $identifier);
-            })
-            ->where('role', $role)
-            ->first();
+        $user = User::where(function ($query) use ($identifier) {
+            $query->where('email', $identifier)
+                ->orWhere('username', $identifier)
+                ->orWhereHas('guru', function ($q) use ($identifier) {
+                    $q->where('nip', $identifier);
+                })
+                ->orWhereHas('siswa', function ($q) use ($identifier) {
+                    $q->where('nis', $identifier);
+                });
+        })
+        ->where('role', $role)
+        ->first();
 
         if (!$user) {
             return back()->with('error', 'Akun tidak ditemukan untuk role ' . ucfirst($role));
