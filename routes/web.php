@@ -30,11 +30,9 @@ use App\Http\Controllers\Guru\ProfilController as GuruProfilController;
 use App\Http\Controllers\HomeController;
 
 
-use Illuminate\Support\Facades\Hash;
 
-Route::get('/generate-hash', function () {
-    return Hash::make('admin123');
-});
+
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -163,4 +161,10 @@ Route::prefix('siswa')->name('siswa.')->middleware('auth')->group(function () {
 
     Route::get('/riwayat-absen', [RiwayatAbsensiController::class, 'index'])
         ->name('riwayat.absen');
+        
+});
+
+
+Route::get('/generate-hash', function () {
+    return \Illuminate\Support\Facades\Hash::make('admin123');
 });
