@@ -47,20 +47,20 @@ class AdminGuruController extends Controller
         return view('admin.guru.create');
     }
 
-    public function store(Request $request)
+public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:8',
             'nip' => 'nullable|unique:gurus,nip',
+            'kelas_pengampu' => 'nullable', // Tambahkan ini
+            'jurusan' => 'nullable',        // Tambahkan ini
         ]);
 
         $statusAkun = $request->status_akun ?? 'nonaktif';
 
-        DB::transaction(function () use ($validated, $statusAkun) {
-
-            // ✅ simpan ke users
+        DB::transaction(function () use ($validated, $statusAkun, $request) {
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -69,10 +69,11 @@ class AdminGuruController extends Controller
                 'role' => 'guru',
             ]);
 
-            // ✅ simpan ke gurus
             Guru::create([
                 'user_id' => $user->id,
                 'nip' => $validated['nip'] ?? null,
+                'kelas_pengampu' => $request->kelas_pengampu, // Simpan kelas
+                'jurusan' => $request->jurusan,               // Simpan jurusan
             ]);
         });
 
@@ -80,19 +81,17 @@ class AdminGuruController extends Controller
             ->with('success', 'Data guru berhasil ditambahkan');
     }
 
-    public function edit($id)
-    {
-        $guru = User::with('guru')->findOrFail($id);
-
-        return view('admin.guru.edit', compact('guru'));
-    }
-
     public function update(Request $request, $id)
     {
         $user = User::with('guru')->findOrFail($id);
 
-        DB::transaction(function () use ($request, $user) {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'nip' => 'nullable|unique:gurus,nip,' . ($user->guru->id ?? 0), // Validasi unique kecuali punya dia sendiri
+        ]);
 
+        DB::transaction(function () use ($request, $user) {
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -105,13 +104,26 @@ class AdminGuruController extends Controller
                 ]);
             }
 
-            $user->guru->update([
-                'nip' => $request->nip,
-            ]);
+            // Pakai updateOrCreate supaya anti-error kalau data di tabel gurus belum ada
+            $user->guru()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'nip' => $request->nip,
+                    'kelas_pengampu' => $request->kelas_pengampu,
+                    'jurusan' => $request->jurusan,
+                ]
+            );
         });
 
         return redirect()->route('admin.guru.index')
             ->with('success', 'Data guru berhasil diperbarui');
+    }
+
+    public function edit($id)
+    {
+        $guru = User::with('guru')->findOrFail($id);
+
+        return view('admin.guru.edit', compact('guru'));
     }
 
     public function destroy($id)
