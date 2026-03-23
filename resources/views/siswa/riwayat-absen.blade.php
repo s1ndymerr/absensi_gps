@@ -57,7 +57,7 @@
 
                                 <!-- Kelas -->
                                 <td>
-                                    <span class="class-name">{{ $absen->siswa->kelas ?? '-' }}</span>
+                                    <span class="class-name">{{ $absen->user->siswa->kelas ?? '-' }}</span>
                                 </td>
 
                                 <!-- Tanggal -->
