@@ -3,26 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminSiswaController extends Controller
 {
     // ===================== LIST SISWA =====================
     public function index()
     {
-      $siswas = User::where('role', 'siswa')
-    ->orderBy('nis', 'asc')
-    ->paginate(10);
-
+        $siswas = User::with('siswa')
+            ->where('role', 'siswa')
+            ->latest()
+            ->paginate(10);
 
         $jumlahSiswaAktif = User::where('role', 'siswa')
             ->where('status_akun', 'aktif')
             ->count();
+
         $totalSiswa = User::where('role', 'siswa')->count();
-       $siswaBaru = User::where('role', 'siswa')
-    ->whereDate('created_at', today())
-    ->count();
+
+        $siswaBaru = User::where('role', 'siswa')
+            ->whereDate('created_at', today())
+            ->count();
 
         return view('admin.siswa.index', compact(
             'siswas',
@@ -46,32 +50,36 @@ class AdminSiswaController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:8',
             'status_akun' => 'required|in:aktif,tidak_aktif',
-            'nis' => 'required|unique:users,nis',
-            'nisn' => 'nullable|unique:users,nisn',
+
+            // ✅ pindah ke siswas
+            'nis' => 'required|unique:siswas,nis',
+
+            // UI tetap
             'tingkat' => 'required',
             'jurusan_kelas' => 'required',
-            'tahun_masuk' => 'nullable|digits:4',
-            'nama_orang_tua' => 'nullable|string',
-            'nomor_telepon' => 'nullable|string',
-            'tanggal_lahir' => 'nullable|date',
         ]);
 
         $kelas = trim($validated['tingkat'].' '.$validated['jurusan_kelas']);
 
-        User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'status_akun' => $validated['status_akun'],
-            'role' => 'siswa',
-            'nis' => $validated['nis'],
-            'nisn' => $validated['nisn'] ?? null,
-            'kelas' => $kelas,
-            'tahun_masuk' => $validated['tahun_masuk'] ?? null,
-            'nama_orang_tua' => $validated['nama_orang_tua'] ?? null,
-            'nomor_telepon' => $validated['nomor_telepon'] ?? null,
-            'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
-        ]);
+        DB::transaction(function () use ($validated, $kelas) {
+
+            // ✅ users
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'siswa',
+                'status_akun' => $validated['status_akun'],
+            ]);
+
+            // ✅ siswas
+            Siswa::create([
+                'user_id' => $user->id,
+                'nis' => $validated['nis'],
+                'kelas' => $kelas,
+                'jurusan' => $validated['jurusan_kelas'],
+            ]);
+        });
 
         return redirect()->route('admin.siswa.index')
             ->with('success', 'Data siswa berhasil ditambahkan');
@@ -80,49 +88,52 @@ class AdminSiswaController extends Controller
     // ===================== FORM EDIT =====================
     public function edit($id)
     {
-        $siswa = User::findOrFail($id);
+        $siswa = User::with('siswa')->findOrFail($id);
         return view('admin.siswa.edit', compact('siswa'));
     }
 
     // ===================== UPDATE SISWA =====================
     public function update(Request $request, $id)
     {
-        $siswa = User::findOrFail($id);
+        $user = User::with('siswa')->findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $siswa->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|confirmed|min:8',
             'status_akun' => 'required|in:aktif,tidak_aktif',
-            'nis' => 'required|unique:users,nis,' . $siswa->id,
-            'nisn' => 'nullable|unique:users,nisn,' . $siswa->id,
+
+            // ✅ cek ke siswas
+            'nis' => 'required|unique:siswas,nis,' . $user->siswa->id,
+
             'tingkat' => 'required',
             'jurusan_kelas' => 'required',
-            'tahun_masuk' => 'nullable|digits:4',
-            'nama_orang_tua' => 'nullable|string',
-            'nomor_telepon' => 'nullable|string',
-            'tanggal_lahir' => 'nullable|date',
         ]);
 
         $kelas = trim($validated['tingkat'].' '.$validated['jurusan_kelas']);
 
-        $siswa->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'status_akun' => $validated['status_akun'],
-            'nis' => $validated['nis'],
-            'nisn' => $validated['nisn'] ?? null,
-            'kelas' => $kelas,
-            'tahun_masuk' => $validated['tahun_masuk'] ?? null,
-            'nama_orang_tua' => $validated['nama_orang_tua'] ?? null,
-            'nomor_telepon' => $validated['nomor_telepon'] ?? null,
-            'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
-        ]);
+        DB::transaction(function () use ($user, $validated, $kelas, $request) {
 
-        if ($request->filled('password')) {
-            $siswa->password = Hash::make($validated['password']);
-            $siswa->save();
-        }
+            // ✅ update users
+            $user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'status_akun' => $validated['status_akun'],
+            ]);
+
+            if ($request->filled('password')) {
+                $user->update([
+                    'password' => Hash::make($validated['password']),
+                ]);
+            }
+
+            // ✅ update siswas
+            $user->siswa->update([
+                'nis' => $validated['nis'],
+                'kelas' => $kelas,
+                'jurusan' => $validated['jurusan_kelas'],
+            ]);
+        });
 
         return redirect()->route('admin.siswa.index')
             ->with('success', 'Data siswa berhasil diperbarui');
@@ -131,7 +142,12 @@ class AdminSiswaController extends Controller
     // ===================== HAPUS SISWA =====================
     public function destroy($id)
     {
-        User::findOrFail($id)->delete();
+        $user = User::with('siswa')->findOrFail($id);
+
+        DB::transaction(function () use ($user) {
+            $user->siswa->delete();
+            $user->delete();
+        });
 
         return redirect()->route('admin.siswa.index')
             ->with('success', 'Siswa berhasil dihapus');
