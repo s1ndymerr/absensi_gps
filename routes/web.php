@@ -164,15 +164,5 @@ Route::prefix('siswa')->name('siswa.')->middleware('auth')->group(function () {
         
 });
 
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
-Route::get('/force-fix', function () {
-    $user = User::where('email', 'admin@gmail.com')->first();
-
-    $user->password = Hash::make('admin123');
-    $user->save();
-
-    return 'Password berhasil di-fix!';
-});
 
