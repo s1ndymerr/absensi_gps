@@ -82,7 +82,7 @@
                                 <i class="fas fa-id-card"></i>
                             </div>
                             <input type="text" id="nis" class="modern-input input-disabled"
-                                   value="{{ $user->nis }}" readonly>
+                                   value="{{ $user->siswa->nis }}" readonly>
                         </div>
                         <small class="info-msg">Data ini tidak dapat diubah</small>
                     </div>
@@ -94,7 +94,7 @@
                                 <i class="fas fa-chalkboard"></i>
                             </div>
                             <input type="text" id="kelas" class="modern-input input-disabled"
-                                   value="{{ $user->kelas }}" readonly>
+                                   value="{{ $user->siswa->kelas }}" readonly>
                         </div>
                     </div>
                 </div>
