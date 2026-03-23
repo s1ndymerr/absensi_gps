@@ -93,14 +93,14 @@
                             <!-- Kelas -->
                             <td>
                                 <div class="class-info">
-                                    <span class="class-name">{{ $siswa->kelas ?? '-' }}</span>
+                                    <span class="class-name">{{ $siswa->siswan->kelas ?? '-' }}</span>
                                 </div>
                             </td>
 
                             <!-- Jurusan -->
                             <td>
                                 <div class="class-info">
-                                    <span class="jurusan-name">{{ $siswa->jurusan ?? '-' }}</span>
+                                    <span class="jurusan-name">{{ $siswa->siswa->jurusan ?? '-' }}</span>
                                 </div>
                             </td>
 
