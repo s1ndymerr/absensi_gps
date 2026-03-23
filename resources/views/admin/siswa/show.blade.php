@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                     <th>NIS</th>
-                    <td>{{ $siswa->nis }}</td>
+                    <td>{{ $siswa->siswa->nis ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Email</th>
@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <th>Kelas</th>
-                    <td>{{ $siswa->kelas ?? '-' }}</td>
+                    <td>{{ $siswa->siswa->kelas ?? '-' }}</td>
                 </tr>
             </table>
         </div>
