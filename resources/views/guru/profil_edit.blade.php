@@ -35,7 +35,7 @@
         padding-top: 20px;
     }
 
-    /* --- HEADER CARD (DESKTOP) --- */
+    /* --- HEADER CARD --- */
     .profile-header-card {
         background: linear-gradient(135deg, var(--primary-soft), var(--secondary-soft));
         border-radius: 24px;
@@ -91,7 +91,7 @@
 
     .meta-separator { opacity: 0.5; }
 
-    /* --- DETAILS CARD (DESKTOP) --- */
+    /* --- DETAILS CARD --- */
     .details-card {
         background: var(--bg-surface);
         border-radius: var(--radius-xl);
@@ -126,7 +126,7 @@
 
     .details-body { padding: 10px 0; }
 
-    /* --- FORM ROWS (DESKTOP) --- */
+    /* --- FORM ROWS --- */
     .info-row {
         display: flex; align-items: center;
         padding: 20px 30px;
@@ -175,14 +175,12 @@
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }
 
-    /* Readonly inputs background */
     input[readonly] {
         background-color: #f8fafc;
         color: #64748b;
         cursor: not-allowed;
     }
 
-    /* --- ACTION FOOTER --- */
     .action-footer {
         width: 100%; max-width: 800px;
         display: flex; justify-content: center; gap: 15px;
@@ -206,67 +204,20 @@
         box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
     }
 
-    /* ----------------------------------------------------------------
-       ANDROID / MOBILE RESPONSIVE VIEW
-    ---------------------------------------------------------------- */
     @media (max-width: 768px) {
-        .profile-page-wrapper {
-            min-height: 100vh; padding-top: 0; padding-bottom: 20px;
-        }
-
         .profile-header-card {
-            border-radius: 0 0 24px 24px;
-            padding: 25px 15px; margin-bottom: 20px;
             flex-direction: column; text-align: center;
+            padding: 25px 15px;
         }
-
-        .avatar-text {
-            width: 70px; height: 70px; font-size: 1.6rem; margin: 0 auto;
-        }
-
-        .profile-text-info h2 { font-size: 1.4rem; margin-bottom: 8px; }
-
-        .profile-meta {
-            justify-content: center; flex-wrap: wrap; gap: 6px; font-size: 0.8rem;
-        }
-        .meta-item { font-size: 0.75rem; padding: 3px 8px; }
-        .meta-separator { display: none; }
-
-        .details-card { border-radius: 16px; margin-bottom: 0; }
-        .details-header { padding: 10px 20px; }
-        .details-header h3 { font-size: 0.95rem; }
-        .details-body { padding: 0; }
-
-        /* Rows become vertical stack on mobile */
-        .info-row {
-            flex-direction: column; align-items: flex-start; text-align: left;
-            padding: 15px 15px; gap: 8px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .info-icon-wrapper {
-            width: 32px; height: 32px; font-size: 0.9rem;
-            margin-bottom: 5px; border-radius: 8px;
-        }
-
+        .profile-meta { justify-content: center; }
+        .info-row { flex-direction: column; align-items: flex-start; }
         .info-content { padding-left: 0; width: 100%; }
-        .info-label { font-size: 0.7rem; margin-bottom: 4px; }
-        .info-input { padding: 10px; font-size: 0.95rem; }
-
-        .action-footer {
-            margin-top: 20px; padding: 0 15px; flex-direction: column;
-        }
-
-        .btn-edit-profile {
-            width: 100%; padding: 12px; font-size: 0.9rem;
-            border-radius: 12px; justify-content: center;
-        }
+        .action-footer { flex-direction: column; }
     }
 </style>
 
 <div class="profile-page-wrapper">
 
-    <!-- Header -->
     <div class="profile-header-card">
         <div class="avatar-bg">
             <div class="avatar-text">
@@ -280,14 +231,13 @@
                     <i class="fas fa-chalkboard-teacher"></i> Guru
                 </span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->kelas ?? '-' }}</span>
+                <span class="meta-item">{{ $user->gurus->kelas_pengampu ?? '-' }}</span>
                 <span class="meta-separator">•</span>
-                <span class="meta-item">{{ $user->jurusan ?? '-' }}</span>
+                <span class="meta-item">{{ $user->gurus->jurusan ?? '-' }}</span>
             </div>
         </div>
     </div>
 
-    <!-- FORM CARD -->
     <div class="details-card">
         <div class="details-header">
             <h3><i class="fas fa-pen"></i> Ubah Informasi Akun</h3>
@@ -298,7 +248,6 @@
 
             <div class="details-body">
 
-                <!-- Nama -->
                 <div class="info-row">
                     <div class="info-icon-wrapper bg-purple">
                         <i class="fas fa-user"></i>
@@ -313,7 +262,6 @@
                     </div>
                 </div>
 
-                <!-- Email -->
                 <div class="info-row">
                     <div class="info-icon-wrapper bg-indigo">
                         <i class="fas fa-envelope"></i>
@@ -328,7 +276,6 @@
                     </div>
                 </div>
 
-                <!-- NIP (READONLY) -->
                 <div class="info-row">
                     <div class="info-icon-wrapper bg-blue">
                         <i class="fas fa-id-badge"></i>
@@ -342,7 +289,6 @@
                     </div>
                 </div>
 
-                <!-- Kelas (READONLY) -->
                 <div class="info-row">
                     <div class="info-icon-wrapper bg-orange">
                         <i class="fas fa-chalkboard"></i>
@@ -350,13 +296,12 @@
                     <div class="info-content">
                         <label class="info-label">Kelas Pengampu</label>
                         <input type="text"
-                               value="{{ $user->gurus->kelas ?? '-' }}"
+                               value="{{ $user->gurus->kelas_pengampu ?? '-' }}"
                                class="info-input"
                                readonly>
                     </div>
                 </div>
 
-                <!-- Jurusan (READONLY) -->
                 <div class="info-row">
                     <div class="info-icon-wrapper bg-pink">
                         <i class="fas fa-bookmark"></i>
@@ -370,7 +315,6 @@
                     </div>
                 </div>
 
-                <!-- Password -->
                 <div class="info-row">
                     <div class="info-icon-wrapper bg-teal">
                         <i class="fas fa-lock"></i>
@@ -386,7 +330,6 @@
 
             </div>
 
-            <!-- ACTION -->
             <div class="action-footer">
                 <button type="submit" class="btn-edit-profile">
                     <i class="fas fa-save"></i> Simpan Perubahan

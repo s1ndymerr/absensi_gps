@@ -42,7 +42,7 @@ class ProfilController extends Controller
             ['user_id' => $user->id],
             [
                 'nip' => $request->nip,
-                'kelas_pengampu' => $request->kelas_pengampu,
+                'kelas_pengampu' => $request->kelas,
                 'jurusan' => $request->jurusan,
             ]
         );
