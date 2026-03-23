@@ -255,9 +255,475 @@
     </form>
 </div>
 
+
 <style>
-    /* Paste CSS original kamu di sini tanpa ada perubahan sedikitpun */
-    /* Pastikan CSS dari prompt awal kamu dimasukkan di sini */
+    /* --- CSS Global Variables & Reset --- */
+    :root {
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --radius: 12px;
+        --radius-sm: 8px;
+    }
+
+    .edit-siswa-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* --- Header --- */
+    .hero-header {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .hero-blob {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .hero-content {
+        z-index: 1;
+    }
+
+    .hero-tag {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        opacity: 0.9;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .hero-content h1 {
+        margin: 0 0 5px 0;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+    .hero-content p {
+        margin: 0;
+        font-size: 0.95rem;
+        opacity: 0.9;
+        max-width: 500px;
+        line-height: 1.5;
+    }
+
+    /* --- Progress Indicator --- */
+    .progress-indicator {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 15px;
+        border-radius: 16px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.3);
+        z-index: 1;
+    }
+
+    .progress-wrapper {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+    }
+
+    .progress-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .progress-value {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .progress-indicator p {
+        margin: 8px 0 0 0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        opacity: 0.9;
+    }
+
+    /* --- Alert --- */
+    .alert-error {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .error-icon-box {
+        background: #fecaca;
+        color: #dc2626;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .error-content h4 {
+        margin: 0 0 5px 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    /* --- Main Card & Toolbar --- */
+    .main-form-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #f1f5f9;
+    }
+
+    .form-section {
+        padding: 30px;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+    .section-header {
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .icon-box {
+        width: 40px;
+        height: 40px;
+        background: #e0e7ff;
+        color: #6366f1;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .icon-indigo { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
+    .icon-orange { background: #ffedd5; color: #f97316; }
+    .icon-green { background: #dcfce7; color: #10b981; }
+
+    .section-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+
+    .section-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    /* --- Grid & Inputs --- */
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .required { color: #ef4444; }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .modern-input {
+        width: 100%;
+        padding: 12px 16px 12px 44px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        color: #334155;
+        background: #ffffff;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        appearance: none;
+    }
+
+    .modern-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        background: #fff;
+    }
+
+    .modern-input.input-error {
+        border-color: #ef4444;
+        background-color: #fef2f2;
+    }
+    
+    .modern-input.input-error:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1rem;
+        transition: color 0.3s;
+        pointer-events: none;
+    }
+
+    .modern-input:focus ~ .input-icon {
+        color: var(--primary);
+    }
+
+    /* Toggle Password Button */
+    .toggle-btn {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .toggle-btn:hover {
+        color: var(--primary);
+        background: #f1f5f9;
+    }
+
+    /* --- UI Components --- */
+    .text-hint {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #94a3b8;
+    }
+
+    .strength-box {
+        margin-top: 8px;
+        display: none;
+    }
+
+    .strength-track {
+        height: 4px;
+        background: #f1f5f9;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .strength-fill {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .strength-text {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+
+    /* --- Buttons --- */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+
+    /* --- Footer --- */
+    .form-footer {
+        padding: 24px 30px;
+        background: white;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+    }
+
+    /* =========================================
+       ANDROID MOBILE APP OPTIMIZATION
+       ========================================= */
+    @media (max-width: 768px) {
+        
+        /* 1. General Container */
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f8fafc;
+            font-size: 14px;
+        }
+
+        .edit-siswa-wrapper {
+            padding: 10px;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        /* 2. Header Section */
+        .hero-header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .hero-blob { display: none; }
+
+        .hero-content h1 { font-size: 1.5rem; }
+
+        /* Progress Inline */
+        .progress-indicator {
+            position: static;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding: 10px 16px;
+        }
+        .progress-wrapper { width: 36px; height: 36px; margin: 0; }
+        .progress-value { font-size: 0.75rem; }
+
+        /* 3. Main Form Card */
+        .main-form-card {
+            margin: 0 10px 80px 10px;
+            border-radius: 12px;
+        }
+
+        /* 4. Form Sections */
+        .form-section {
+            padding: 20px 16px;
+        }
+
+        .section-header {
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .section-header h3 { font-size: 0.95rem; }
+        .icon-box { width: 32px; height: 32px; font-size: 0.9rem; }
+
+        /* 5. Grid System (Force Stacking) */
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 6. Inputs (Touch Optimized) */
+        .form-group.full-width { display: block; }
+
+        .modern-input {
+            padding: 12px 12px 12px 42px;
+            height: 48px;
+            font-size: 16px;
+            border-radius: 10px;
+        }
+
+        .input-icon { left: 12px; top: 50%; font-size: 1rem; }
+        .toggle-btn { right: 10px; padding: 8px; }
+
+        /* 7. Buttons (Full Width Stacked) */
+        .form-footer {
+            flex-direction: column;
+            padding: 16px;
+            gap: 10px;
+        }
+
+        .btn { width: 100%; padding: 14px; }
+
+    }
 </style>
 
 <script>
